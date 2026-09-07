@@ -1,0 +1,69 @@
+{
+  "id": "healthcare",
+  "displayName": "Contoso Health",
+  "search": {
+    "catalogIndex": "services_index",
+    "policiesIndex": "care_policies_index"
+  },
+  "agents": {
+    "catalogAgentPrefix": "services-agent",
+    "policyAgentPrefix": "care-policy-agent",
+    "chatAgentPrefix": "chat-agent",
+    "catalogToolName": "services_agent",
+    "policyToolName": "care_policy_agent"
+  },
+  "data": {
+    "catalogCsv": "data/catalog.csv",
+    "policiesDir": "data/policies"
+  },
+  "host": {
+    "appTitle": "Contoso Health",
+    "iconPath": "assets/contoso-icon.png",
+    "assistantIconPath": "assets/contoso-ai-icon.png",
+    "widgetTheme": "light",
+    "complianceBanner": "Not for medical emergencies. This assistant does not provide medical diagnosis or treatment advice."
+  },
+  "welcome": {
+    "title": "How can I help with your care today?",
+    "subtitle": "Ask about appointments, departments, visiting hours, or billing questions.",
+    "hint": "Click the new chat button above to start a new conversation anytime"
+  },
+  "catalog": {
+    "routePrefix": "/api/services",
+    "itemSingular": "service",
+    "itemPlural": "services",
+    "cardSchema": {
+      "title": "title",
+      "eyebrow": "category",
+      "description": "description",
+      "secondary": "punchLine",
+      "image": "image",
+      "highlights": "highlights"
+    },
+    "cardVariant": "list",
+    "enabledEndpoints": ["list", "categories"]
+  },
+  "presentation": {
+    "defaultImage": "assets/primary-care.svg",
+    "items": {
+      "HC-0001": { "highlights": ["Preventive care", "Chronic condition management", "Board-certified physicians"] },
+      "HC-0002": { "highlights": ["X-ray, MRI, CT, ultrasound", "Same-week scheduling", "On-site imaging"] },
+      "HC-0003": { "highlights": ["Heart health evaluations", "Stress testing", "Specialist consultations"] },
+      "HC-0004": { "highlights": ["On-site blood work", "Diagnostic testing", "Results in patient portal"] },
+      "HC-0005": { "highlights": ["Post-surgery recovery", "Injury rehabilitation", "Licensed therapists"] },
+      "HC-0006": { "highlights": ["Walk-in care", "Seven days a week", "Non-emergency treatment"] },
+      "HC-0007": { "highlights": ["Well-child visits", "Immunizations", "Pediatric referrals"] },
+      "HC-0008": { "highlights": ["OB/GYN services", "Prenatal care", "Women wellness programs"] }
+    },
+    "titleAliases": {
+      "Primary Care": "HC-0001",
+      "Radiology & Imaging": "HC-0002",
+      "Cardiology": "HC-0003",
+      "Laboratory Services": "HC-0004",
+      "Physical Therapy": "HC-0005",
+      "Urgent Care": "HC-0006",
+      "Pediatrics": "HC-0007",
+      "Women's Health": "HC-0008"
+    }
+  }
+}

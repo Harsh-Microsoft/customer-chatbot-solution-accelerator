@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mcaps-microsoft/frontier-accelerator-factory/technical-patterns/chat-with-data-voice/config/scenario-config.schema.json",
+  "title": "Scenario configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["host", "welcome", "catalog", "presentation"],
+  "properties": {
+    "host": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["appTitle", "iconPath", "widgetTheme", "complianceBanner", "assistantIconPath"],
+      "properties": {
+        "appTitle": { "type": "string", "minLength": 1 },
+        "iconPath": { "type": "string", "minLength": 1 },
+        "widgetTheme": { "type": "string", "minLength": 1 },
+        "complianceBanner": { "type": "string" },
+        "assistantIconPath": { "type": "string", "minLength": 1 }
+      }
+    },
+    "welcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "subtitle", "hint"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "subtitle": { "type": "string", "minLength": 1 },
+        "hint": { "type": "string", "minLength": 1 }
+      }
+    },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["routePrefix", "itemSingular", "itemPlural", "cardSchema", "enabledEndpoints", "cardVariant", "copy"],
+      "properties": {
+        "routePrefix": { "type": "string", "minLength": 1 },
+        "itemSingular": { "type": "string", "minLength": 1 },
+        "itemPlural": { "type": "string", "minLength": 1 },
+        "cardSchema": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "enabledEndpoints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["list", "categories", "item", "featured", "related"]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "cardVariant": {
+          "type": "string",
+          "enum": ["grid", "list", "detail"]
+        },
+        "copy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["intro", "loadError"],
+          "properties": {
+            "intro": { "type": "string", "minLength": 1 },
+            "loadError": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["defaultImage", "items", "titleAliases"],
+      "properties": {
+        "defaultImage": { "type": "string", "minLength": 1 },
+        "items": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["highlights"],
+            "properties": {
+              "highlights": {
+                "type": "array",
+                "items": { "type": "string", "minLength": 1 },
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            }
+          }
+        },
+        "titleAliases": {
+          "type": "object",
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

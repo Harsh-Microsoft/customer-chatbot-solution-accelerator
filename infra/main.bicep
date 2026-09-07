@@ -46,7 +46,9 @@ param solutionUniqueText string = substring(uniqueString(subscription().id, reso
 param location string
 
 @description('Optional. Tags to apply to all resources.')
-param tags object = {}
+param tags object = {
+  SecurityControl: 'Ignore'
+}
 
 @allowed([
   'eastus2'
@@ -59,7 +61,7 @@ param tags object = {}
   azd: {
     type: 'location'
     usageName: [
-      'OpenAI.GlobalStandard.gpt-5.4-mini,50'
+      'OpenAI.GlobalStandard.gpt-5.4-mini,10'
       'OpenAI.GlobalStandard.text-embedding-3-small,10'
       'OpenAI.GlobalStandard.gpt-realtime-mini,1'
     ]
@@ -95,7 +97,7 @@ param gptModelVersion string = '2026-03-17'
 
 @minValue(10)
 @description('Optional. Capacity of the GPT deployment (TPM in thousands).')
-param gptDeploymentCapacity int = 50
+param gptDeploymentCapacity int = 10
 
 @allowed([
   'text-embedding-3-small'

@@ -1,0 +1,85 @@
+{
+  "id": "banking",
+  "displayName": "Contoso Banking",
+  "search": {
+    "catalogIndex": "accounts_index",
+    "policiesIndex": "banking_policies_index"
+  },
+  "agents": {
+    "catalogAgentPrefix": "accounts-agent",
+    "policyAgentPrefix": "banking-policy-agent",
+    "chatAgentPrefix": "chat-agent",
+    "catalogToolName": "accounts_agent",
+    "policyToolName": "banking_policy_agent"
+  },
+  "data": {
+    "catalogCsv": "data/catalog.csv",
+    "policiesDir": "data/policies"
+  },
+  "host": {
+    "appTitle": "Contoso Banking",
+    "iconPath": "assets/contoso-icon.png",
+    "assistantIconPath": "assets/contoso-ai-icon.png",
+    "widgetTheme": "light",
+    "complianceBanner": "Not financial advice. Do not share full account numbers, PINs, or passwords in chat."
+  },
+  "welcome": {
+    "title": "How can I help with your banking today?",
+    "subtitle": "Ask about accounts, transactions, fees, or digital banking support.",
+    "hint": "Click the new chat button above to start a new conversation anytime"
+  },
+  "catalog": {
+    "routePrefix": "/api/accounts",
+    "itemSingular": "account",
+    "itemPlural": "accounts",
+    "cardSchema": {
+      "title": "title",
+      "eyebrow": "category",
+      "description": "description",
+      "secondary": "punchLine",
+      "image": "image",
+      "highlights": "highlights"
+    },
+    "cardVariant": "list",
+    "enabledEndpoints": ["list"]
+  },
+  "presentation": {
+    "defaultImage": "assets/checking.svg",
+    "items": {
+      "BK-0001": {
+        "highlights": ["No monthly fee with direct deposit", "Mobile check deposit", "Bill pay included"]
+      },
+      "BK-0002": {
+        "highlights": ["Competitive APY", "No minimum balance for existing customers", "FDIC insured"]
+      },
+      "BK-0003": {
+        "highlights": ["2x points on travel and dining", "No foreign transaction fees", "Platinum rewards tier"]
+      },
+      "BK-0004": {
+        "highlights": ["Fixed-rate options", "Down payment assistance programs", "First-time buyer support"]
+      },
+      "BK-0005": {
+        "highlights": ["Business debit cards", "ACH origination", "Accounting tool integrations"]
+      },
+      "BK-0006": {
+        "highlights": ["Terms from 6 to 60 months", "Tiered rates for higher balances", "Guaranteed fixed rate"]
+      },
+      "BK-0007": {
+        "highlights": ["No maintenance fee for students", "Valid student ID required", "Digital banking tools"]
+      },
+      "BK-0008": {
+        "highlights": ["Guided portfolios", "Retirement planning", "Fiduciary advisors"]
+      }
+    },
+    "titleAliases": {
+      "Everyday Checking": "BK-0001",
+      "High-Yield Savings": "BK-0002",
+      "Platinum Rewards Credit Card": "BK-0003",
+      "First-Time Homebuyer Mortgage": "BK-0004",
+      "Small Business Checking": "BK-0005",
+      "Certificate of Deposit": "BK-0006",
+      "Student Checking": "BK-0007",
+      "Investment Advisory": "BK-0008"
+    }
+  }
+}

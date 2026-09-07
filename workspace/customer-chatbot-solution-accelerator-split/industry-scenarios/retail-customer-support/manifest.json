@@ -1,0 +1,86 @@
+{
+  "id": "ecommerce",
+  "displayName": "Contoso Paints",
+  "search": {
+    "catalogIndex": "products_index",
+    "policiesIndex": "policies_index"
+  },
+  "agents": {
+    "catalogAgentPrefix": "product-agent",
+    "policyAgentPrefix": "policy-agent",
+    "chatAgentPrefix": "chat-agent",
+    "catalogToolName": "product_agent",
+    "policyToolName": "policy_agent"
+  },
+  "data": {
+    "catalogCsv": "data/catalog.csv",
+    "policiesDir": "data/policies"
+  },
+  "host": {
+    "appTitle": "Contoso",
+    "iconPath": "assets/contoso-icon.png",
+    "assistantIconPath": "assets/contoso-ai-icon.png",
+    "widgetTheme": "dark",
+    "complianceBanner": ""
+  },
+  "welcome": {
+    "title": "Hey! I'm here to help.",
+    "subtitle": "Ask me about returns & exchanges, warranties, or general product advice.",
+    "hint": "Click the new chat button above to start a new chat anytime"
+  },
+  "catalog": {
+    "routePrefix": "/api/products",
+    "itemSingular": "product",
+    "itemPlural": "products",
+    "cardSchema": {
+      "title": "title",
+      "eyebrow": "category",
+      "description": "description",
+      "secondary": "punchLine",
+      "price": "price",
+      "image": "image",
+      "highlights": "highlights"
+    },
+    "cardVariant": "grid",
+    "enabledEndpoints": ["list", "categories", "item", "featured", "related"]
+  },
+  "presentation": {
+    "defaultImage": "assets/SnowVeil.jpg",
+    "items": {
+      "CP-0001": { "highlights": ["Soft white", "airy", "minimal", "fresh"] },
+      "CP-0002": { "highlights": ["Warm neutral", "beige", "cozy", "calm"] },
+      "CP-0003": { "highlights": ["Greige", "muted", "balanced", "modern"] },
+      "CP-0004": { "highlights": ["Cool gray", "stormy", "industrial", "sleek"] },
+      "CP-0005": { "highlights": ["Charcoal", "deep gray", "moody", "bold"] },
+      "CP-0006": { "highlights": ["Black", "matte", "dramatic", "luxe"] },
+      "CP-0007": { "highlights": ["Slate", "bluish gray", "urban", "cool"] },
+      "CP-0008": { "highlights": ["Midnight", "muted navy", "grounding", "refined"] },
+      "CP-0009": { "highlights": ["Pale blue", "soft", "tranquil", "airy"] },
+      "CP-0010": { "highlights": ["Cool gray", "icy", "clean", "modern"] },
+      "CP-0011": { "highlights": ["Pale green", "misty", "fresh", "coastal"] },
+      "CP-0012": { "highlights": ["Sage gray", "organic", "muted", "grounding"] },
+      "CP-0013": { "highlights": ["Earthy", "muted green", "natural", "rustic"] },
+      "CP-0014": { "highlights": ["Soft teal", "subdued", "calming", "serene"] },
+      "CP-0015": { "highlights": ["Pale aqua", "refreshing", "crisp", "airy"] },
+      "CP-0016": { "highlights": ["Forest gray", "cool green", "earthy", "grounding"] }
+    },
+    "titleAliases": {
+      "Snow Veil": "CP-0001",
+      "Porcelain Mist": "CP-0002",
+      "Stone Dusk": "CP-0003",
+      "Fog Harbor": "CP-0004",
+      "Graphite Fade": "CP-0005",
+      "Obsidian Pearl": "CP-0006",
+      "Steel Sky": "CP-0007",
+      "Blue Ash": "CP-0008",
+      "Cloud Drift": "CP-0009",
+      "Silver Shore": "CP-0010",
+      "Seafoam Light": "CP-0011",
+      "Quiet Moss": "CP-0012",
+      "Olive Stone": "CP-0013",
+      "Verdant Haze": "CP-0014",
+      "Glacier Tint": "CP-0015",
+      "Pine Shadow": "CP-0016"
+    }
+  }
+}

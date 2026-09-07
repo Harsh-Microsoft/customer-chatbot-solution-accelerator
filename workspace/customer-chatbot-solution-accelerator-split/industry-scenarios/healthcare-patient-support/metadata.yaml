@@ -1,0 +1,195 @@
+$schema: ../../metadata/schemas/industry-scenario.schema.json
+schemaVersion: "1.0"
+kind: industry-scenario
+id: healthcare-patient-support
+name: Healthcare patient support
+version: 1.0.0
+status: incubating
+summary: Healthcare patient-support scenario with catalog, policy, and asset data.
+description: >-
+  Specializes the chat-with-data-voice pattern with healthcare service catalog data,
+  patient policy documents, scenario-local images, manifest configuration, and grounded evaluations.
+repositoryPath: industry-scenarios/healthcare-patient-support
+
+capabilities:
+  - id: healthcare-support-config
+    name: Healthcare support configuration
+    description: Supplies the healthcare scenario manifest and host, welcome, catalog, and presentation settings.
+    category: configuration
+    keywords: [healthcare, manifest, configuration]
+  - id: healthcare-support-catalog-data
+    name: Healthcare catalog data
+    description: Provides the service catalog CSV and localized image paths.
+    category: data
+    keywords: [healthcare, catalog, data]
+  - id: healthcare-support-policy-corpus
+    name: Healthcare policy corpus
+    description: Provides the patient policy and visiting-hours documents used for grounded responses.
+    category: data
+    keywords: [healthcare, policy, retrieval]
+  - id: healthcare-support-evaluation
+    name: Healthcare support evaluation
+    description: Provides starter grounding checks for patient-support questions.
+    category: evaluation
+    keywords: [healthcare, evaluation, grounding]
+
+artifacts:
+  - type: configuration
+    path: manifest.json
+    purpose: Scenario host, welcome, catalog, and presentation configuration.
+    required: true
+  - type: data
+    path: data/catalog.csv
+    purpose: Healthcare catalog rows with scenario-relative image paths.
+    required: true
+  - type: data
+    path: data/policies
+    purpose: Healthcare patient policy documents for grounded answers.
+    required: true
+  - type: data
+    path: assets
+    purpose: Healthcare-local image assets used by the catalog cards.
+    required: true
+  - type: prompt
+    path: agents
+    purpose: Healthcare agent instruction texts for catalog, chat, and policy agents.
+    required: true
+  - type: evaluation
+    path: evals/dataset.jsonl
+    purpose: Starter grounding evaluation questions and answers.
+    required: true
+  - type: docs
+    path: README.md
+    purpose: Scenario overview and composition notes.
+    required: false
+
+compatibility:
+  azureClouds: [AzureCloud]
+  regions: []
+  iac: [none]
+  runtimes: [python-3.10]
+  limitations:
+    - Synthetic demo content only; not intended for production healthcare decisions.
+    - Requires the chat-with-data-voice pattern and scenario asset serving.
+
+composition:
+  selectable: true
+  defaultSelection: true
+  conflictsWith: []
+  replaces: []
+  notes:
+    - Compose with the chat-with-data-voice technical pattern.
+    - Keep the healthcare domain context, policy corpus, catalog rows, and localized assets together.
+
+ownership:
+  team: Frontier Accelerator Factory
+  maintainers: []
+tags: [healthcare, patient-support, hls, provider-services, chat]
+
+industry:
+  name: Healthcare and life sciences
+  segments: [provider-services]
+
+businessProcesses:
+  - Patient service discovery
+  - Billing and policy guidance
+  - Scheduling and visiting-hours support
+  - Patient rights and hospital policy support
+
+personas:
+  - name: Patient or caregiver
+    goals:
+      - Understand available services, departments, and support policies.
+      - Get help with billing, visiting hours, and patient rights.
+    decisions:
+      - Which service or department fits the need.
+      - How to respond to a policy or scheduling question.
+  - name: Patient support specialist
+    goals:
+      - Answer healthcare service and policy questions accurately.
+      - Guide patients to the right support path.
+    decisions:
+      - Which service or policy applies to the request.
+      - Whether the question needs a safe refusal or escalation.
+
+useCases:
+  - id: service-guidance
+    title: Service guidance
+    description: Help patients explore clinical services and department information.
+    outcomes:
+      - Relevant service options with concise supporting details.
+      - Faster routing to the right department or care program.
+    exampleQuestions:
+      - Which service is best for preventive care and check-ups?
+      - What highlights are listed for radiology and imaging?
+  - id: policy-and-billing-help
+    title: Policy and billing help
+    description: Answer patient rights, billing, and visiting-hours questions.
+    outcomes:
+      - Safe policy guidance with the correct escalation path.
+      - Clear instructions for billing and hospital policy questions.
+    exampleQuestions:
+      - What are the patient rights for medical records and privacy?
+      - What are the general visiting hours?
+
+compatibleTechnicalPatterns:
+  - id: chat-with-data-voice
+    layer: technical-pattern
+    versionConstraint: ">=1.0.0 <2.0.0"
+    reason: Provides the conversational data access, grounded retrieval, voice channel, and scenario configuration surface this scenario uses.
+
+requiredPatternCapabilities:
+  - scenario-manifest
+  - connected-agent-handoff
+  - catalog-index
+  - policy-index
+  - chat-widget-embed
+  - realtime-voice
+  - scenario-config-api
+  - schema-driven-catalog-ui
+  - scenario-asset-serving
+
+domainAssets:
+  structuredData:
+    - data/catalog.csv
+  unstructuredData:
+    - data/policies
+  schemas: []
+  ontologies: []
+  prompts:
+    - agents/catalog_agent.txt
+    - agents/chat_agent.txt
+    - agents/policy_agent.txt
+  configuration:
+    - manifest.json
+    - assets
+
+dataCharacteristics:
+  classification: public
+  synthetic: true
+  redistribution: Review and follow the repository license and source-specific notices.
+
+evaluations:
+  - name: Healthcare patient support grounding checks
+    datasetPath: evals/dataset.jsonl
+    metrics: [groundedness, relevance, answer-correctness]
+    successCriteria:
+      - Answers use the supplied healthcare catalog and policy corpus.
+      - Image references resolve through the scenario assets.
+
+implementation:
+  configurationPaths:
+    - manifest.json
+  loadPaths:
+    - data/catalog.csv
+    - data/policies
+    - assets
+    - agents
+  customizations:
+    - Rewrite catalog image values to scenario-relative asset paths.
+    - Serve healthcare images from the scenario asset route under SCENARIO_PATH.
+    - Keep agent instructions separate from the manifest and catalog data.
+
+exclusions:
+  - Customer production data and customer-specific healthcare rules.
+  - Autonomous medical advice or account actions.

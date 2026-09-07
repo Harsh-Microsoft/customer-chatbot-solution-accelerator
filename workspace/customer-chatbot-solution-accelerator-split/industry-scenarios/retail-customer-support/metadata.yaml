@@ -1,0 +1,195 @@
+$schema: ../../metadata/schemas/industry-scenario.schema.json
+schemaVersion: "1.0"
+kind: industry-scenario
+id: retail-customer-support
+name: Retail customer support
+version: 1.0.0
+status: incubating
+summary: Retail product-support scenario with catalog, policy, and asset data.
+description: >-
+  Specializes the chat-with-data-voice pattern with retail product catalog data,
+  Contoso Paints policy documents, scenario-local images, manifest configuration, and grounded evaluations.
+repositoryPath: industry-scenarios/retail-customer-support
+
+capabilities:
+  - id: retail-support-config
+    name: Retail support configuration
+    description: Supplies the retail scenario manifest and host, welcome, catalog, and presentation settings.
+    category: configuration
+    keywords: [retail, manifest, configuration]
+  - id: retail-support-catalog-data
+    name: Retail catalog data
+    description: Provides the product catalog CSV and localized image paths.
+    category: data
+    keywords: [retail, catalog, data]
+  - id: retail-support-policy-corpus
+    name: Retail policy corpus
+    description: Provides the Contoso Paints policy and warranty documents used for grounded responses.
+    category: data
+    keywords: [retail, policy, retrieval]
+  - id: retail-support-evaluation
+    name: Retail support evaluation
+    description: Provides starter grounding checks for paint and policy questions.
+    category: evaluation
+    keywords: [retail, evaluation, grounding]
+
+artifacts:
+  - type: configuration
+    path: manifest.json
+    purpose: Scenario host, welcome, catalog, and presentation configuration.
+    required: true
+  - type: data
+    path: data/catalog.csv
+    purpose: Retail catalog rows with scenario-relative image paths.
+    required: true
+  - type: data
+    path: data/policies
+    purpose: Retail paint policy documents for grounded answers.
+    required: true
+  - type: data
+    path: assets
+    purpose: Retail-local image assets used by the catalog cards.
+    required: true
+  - type: prompt
+    path: agents
+    purpose: Retail agent instruction texts for catalog, chat, and policy agents.
+    required: true
+  - type: evaluation
+    path: evals/dataset.jsonl
+    purpose: Starter grounding evaluation questions and answers.
+    required: true
+  - type: docs
+    path: README.md
+    purpose: Scenario overview and composition notes.
+    required: false
+
+compatibility:
+  azureClouds: [AzureCloud]
+  regions: []
+  iac: [none]
+  runtimes: [python-3.10]
+  limitations:
+    - Synthetic demo content only; not intended for production retail decisions.
+    - Requires the chat-with-data-voice pattern and scenario asset serving.
+
+composition:
+  selectable: true
+  defaultSelection: true
+  conflictsWith: []
+  replaces: []
+  notes:
+    - Compose with the chat-with-data-voice technical pattern.
+    - Keep the retail domain context, policy corpus, catalog rows, and localized assets together.
+
+ownership:
+  team: Frontier Accelerator Factory
+  maintainers: []
+tags: [retail, customer-support, rcg, paints, chat]
+
+industry:
+  name: Retail and consumer goods
+  segments: [specialty-retail]
+
+businessProcesses:
+  - Product browsing and shade selection
+  - Returns and warranty guidance
+  - Color and material support
+  - Brand and product information support
+
+personas:
+  - name: Retail customer
+    goals:
+      - Compare paint shades, finishes, and product information.
+      - Understand return and warranty policies.
+    decisions:
+      - Which paint color or product fits the project.
+      - How to handle a return or warranty question.
+  - name: Paint support specialist
+    goals:
+      - Answer product and policy questions accurately.
+      - Guide customers to the right paint selection.
+    decisions:
+      - Which product details apply to the request.
+      - Whether the request needs a policy response or escalation.
+
+useCases:
+  - id: shade-guidance
+    title: Shade guidance
+    description: Help customers explore paint shades and product details.
+    outcomes:
+      - Relevant paint options with concise supporting details.
+      - Faster routing to the right product or finish.
+    exampleQuestions:
+      - Which color is a soft white with a hint of warmth?
+      - What are the highlights for a calming blue shade?
+  - id: policy-and-warranty-help
+    title: Policy and warranty help
+    description: Answer returns, warranty, and product-support questions.
+    outcomes:
+      - Safe policy guidance with the correct escalation path.
+      - Clear instructions for returns and warranty claims.
+    exampleQuestions:
+      - What is the return policy for Contoso Paints?
+      - What does the paint warranty cover?
+
+compatibleTechnicalPatterns:
+  - id: chat-with-data-voice
+    layer: technical-pattern
+    versionConstraint: ">=1.0.0 <2.0.0"
+    reason: Provides the conversational data access, grounded retrieval, voice channel, and scenario configuration surface this scenario uses.
+
+requiredPatternCapabilities:
+  - scenario-manifest
+  - connected-agent-handoff
+  - catalog-index
+  - policy-index
+  - chat-widget-embed
+  - realtime-voice
+  - scenario-config-api
+  - schema-driven-catalog-ui
+  - scenario-asset-serving
+
+domainAssets:
+  structuredData:
+    - data/catalog.csv
+  unstructuredData:
+    - data/policies
+  schemas: []
+  ontologies: []
+  prompts:
+    - agents/catalog_agent.txt
+    - agents/chat_agent.txt
+    - agents/policy_agent.txt
+  configuration:
+    - manifest.json
+    - assets
+
+dataCharacteristics:
+  classification: public
+  synthetic: true
+  redistribution: Review and follow the repository license and source-specific notices.
+
+evaluations:
+  - name: Retail customer support grounding checks
+    datasetPath: evals/dataset.jsonl
+    metrics: [groundedness, relevance, answer-correctness]
+    successCriteria:
+      - Answers use the supplied retail catalog and policy corpus.
+      - Image references resolve through the scenario assets.
+
+implementation:
+  configurationPaths:
+    - manifest.json
+  loadPaths:
+    - data/catalog.csv
+    - data/policies
+    - assets
+    - agents
+  customizations:
+    - Rewrite catalog image values to scenario-relative asset paths.
+    - Serve retail images from the scenario asset route under SCENARIO_PATH.
+    - Keep agent instructions separate from the manifest and catalog data.
+
+exclusions:
+  - Customer production data and customer-specific retail rules.
+  - Autonomous product or pricing advice.

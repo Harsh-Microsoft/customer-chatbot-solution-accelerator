@@ -1,0 +1,195 @@
+$schema: ../../metadata/schemas/industry-scenario.schema.json
+schemaVersion: "1.0"
+kind: industry-scenario
+id: banking-customer-support
+name: Banking customer support
+version: 1.0.0
+status: incubating
+summary: Retail banking customer-support scenario with catalog, policy, and asset data.
+description: >-
+  Specializes the chat-with-data-voice pattern with retail banking catalog data,
+  banking policy documents, scenario-local images, manifest configuration, and grounded evaluations.
+repositoryPath: industry-scenarios/banking-customer-support
+
+capabilities:
+  - id: banking-support-config
+    name: Banking support configuration
+    description: Supplies the banking scenario manifest and host, welcome, catalog, and presentation settings.
+    category: configuration
+    keywords: [banking, manifest, configuration]
+  - id: banking-support-catalog-data
+    name: Banking catalog data
+    description: Provides the retail banking catalog CSV and localized image paths.
+    category: data
+    keywords: [banking, catalog, data]
+  - id: banking-support-policy-corpus
+    name: Banking policy corpus
+    description: Provides the banking policy and fee documents used for grounded responses.
+    category: data
+    keywords: [banking, policy, retrieval]
+  - id: banking-support-evaluation
+    name: Banking support evaluation
+    description: Provides starter grounding checks for banking customer-support questions.
+    category: evaluation
+    keywords: [banking, evaluation, grounding]
+
+artifacts:
+  - type: configuration
+    path: manifest.json
+    purpose: Scenario host, welcome, catalog, and presentation configuration.
+    required: true
+  - type: data
+    path: data/catalog.csv
+    purpose: Banking catalog rows with scenario-relative image paths.
+    required: true
+  - type: data
+    path: data/policies
+    purpose: Banking policy documents for grounded answers.
+    required: true
+  - type: data
+    path: assets
+    purpose: Banking-local image assets used by the catalog cards.
+    required: true
+  - type: prompt
+    path: agents
+    purpose: Banking agent instruction texts for catalog, chat, and policy agents.
+    required: true
+  - type: evaluation
+    path: evals/dataset.jsonl
+    purpose: Starter grounding evaluation questions and answers.
+    required: true
+  - type: docs
+    path: README.md
+    purpose: Scenario overview and composition notes.
+    required: false
+
+compatibility:
+  azureClouds: [AzureCloud]
+  regions: []
+  iac: [none]
+  runtimes: [python-3.10]
+  limitations:
+    - Synthetic demo content only; not intended for production banking decisions.
+    - Requires the chat-with-data-voice pattern and scenario asset serving.
+
+composition:
+  selectable: true
+  defaultSelection: true
+  conflictsWith: []
+  replaces: []
+  notes:
+    - Compose with the chat-with-data-voice technical pattern.
+    - Keep the banking domain context, policy corpus, catalog rows, and localized assets together.
+
+ownership:
+  team: Frontier Accelerator Factory
+  maintainers: []
+tags: [banking, customer-support, fsi, retail-banking, chat]
+
+industry:
+  name: Financial services
+  segments: [retail-banking]
+
+businessProcesses:
+  - Banking account discovery
+  - Fee and policy guidance
+  - Digital banking support
+  - Fraud reporting and account safety
+
+personas:
+  - name: Retail banking customer
+    goals:
+      - Understand available account and lending offerings.
+      - Get help with fees, digital banking, and fraud reporting.
+    decisions:
+      - Which account or lending option fits the need.
+      - How to respond to a banking issue or policy question.
+  - name: Banking support specialist
+    goals:
+      - Answer banking policy and account questions accurately.
+      - Guide customers to the right product or support path.
+    decisions:
+      - Which product or policy applies to the request.
+      - Whether the question needs a safe refusal or escalation.
+
+useCases:
+  - id: account-guidance
+    title: Account guidance
+    description: Help customers compare checking, savings, lending, and wealth offerings.
+    outcomes:
+      - Relevant account options with concise supporting details.
+      - Faster routing to the right banking product.
+    exampleQuestions:
+      - Which checking account has no monthly fee with direct deposit?
+      - What savings and lending options are available?
+  - id: policy-and-fraud-help
+    title: Policy and fraud help
+    description: Answer banking fee, digital banking, and fraud reporting questions.
+    outcomes:
+      - Safe policy guidance with the correct escalation path.
+      - Clear instructions for digital banking and fraud incidents.
+    exampleQuestions:
+      - What is the fee schedule for overdraft protection?
+      - How do I report unauthorized transactions?
+
+compatibleTechnicalPatterns:
+  - id: chat-with-data-voice
+    layer: technical-pattern
+    versionConstraint: ">=1.0.0 <2.0.0"
+    reason: Provides the conversational data access, grounded retrieval, voice channel, and scenario configuration surface this scenario uses.
+
+requiredPatternCapabilities:
+  - scenario-manifest
+  - connected-agent-handoff
+  - catalog-index
+  - policy-index
+  - chat-widget-embed
+  - realtime-voice
+  - scenario-config-api
+  - schema-driven-catalog-ui
+  - scenario-asset-serving
+
+domainAssets:
+  structuredData:
+    - data/catalog.csv
+  unstructuredData:
+    - data/policies
+  schemas: []
+  ontologies: []
+  prompts:
+    - agents/catalog_agent.txt
+    - agents/chat_agent.txt
+    - agents/policy_agent.txt
+  configuration:
+    - manifest.json
+    - assets
+
+dataCharacteristics:
+  classification: public
+  synthetic: true
+  redistribution: Review and follow the repository license and source-specific notices.
+
+evaluations:
+  - name: Banking customer support grounding checks
+    datasetPath: evals/dataset.jsonl
+    metrics: [groundedness, relevance, answer-correctness]
+    successCriteria:
+      - Answers use the supplied banking catalog and policy corpus.
+      - Image references resolve through the scenario assets.
+
+implementation:
+  configurationPaths:
+    - manifest.json
+  loadPaths:
+    - data/catalog.csv
+    - data/policies
+    - assets
+    - agents
+  customizations:
+    - Rewrite catalog image values to scenario-relative asset paths.
+    - Serve banking images from the scenario asset route under SCENARIO_PATH.
+    - Keep agent instructions separate from the manifest and catalog data.
+
+exclusions:
+  - Customer production data and customer-specific banking rules.
+  - Autonomous financial advice or account actions.

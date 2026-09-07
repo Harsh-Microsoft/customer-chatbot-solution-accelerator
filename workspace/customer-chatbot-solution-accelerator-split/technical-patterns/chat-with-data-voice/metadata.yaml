@@ -1,0 +1,226 @@
+$schema: ../../metadata/schemas/technical-pattern.schema.json
+schemaVersion: "1.0"
+kind: technical-pattern
+id: chat-with-data-voice
+name: Chat with Data Voice
+version: 1.0.0
+status: proposed
+summary: Generic catalog chat pattern with scenario-configured UI, assets, and optional voice.
+description: >-
+  Reusable technical pattern for a catalog chat experience that externalizes
+  all scenario-specific values through manifest configuration and scenario
+  assets, while keeping the application UI, API, and loader mechanism generic.
+repositoryPath: technical-patterns/chat-with-data-voice
+
+capabilities:
+  - id: conversational-catalog-access
+    name: Conversational catalog access
+    description: Lets users browse and question catalog content through a chat UI.
+    category: application
+    keywords: [chat, catalog, ui]
+  - id: scenario-config-delivery
+    name: Scenario config delivery
+    description: Serves a browser-safe manifest surface to the frontend at runtime.
+    category: application
+    keywords: [manifest, configuration, api]
+  - id: scenario-asset-serving
+    name: Scenario asset serving
+    description: Serves scenario-local image assets through a guarded API route.
+    category: application
+    keywords: [assets, files, security]
+  - id: real-time-voice
+    name: Real-time voice
+    description: Adds optional voice interaction on top of the catalog chat flow.
+    category: agent
+    keywords: [voice, realtime, audio]
+  - id: scenario-loading
+    name: Scenario loading
+    description: Loads manifest, agent instructions, and data files from a composed scenario.
+    category: data
+    keywords: [loading, loader, scenario]
+
+artifacts:
+  - type: infra
+    path: infra/bicep
+    purpose: Application hosting and app-specific resources for the pattern.
+    required: true
+  - type: code
+    path: src/api
+    purpose: FastAPI surface for catalog, config, and scenario assets.
+    required: true
+  - type: code
+    path: src/app
+    purpose: Generic catalog web application and runtime config provider.
+    required: true
+  - type: script
+    path: scripts
+    purpose: Post-provision automation for agent creation, data loading, and scenario bootstrap.
+    required: true
+  - type: configuration
+    path: config
+    purpose: Published JSON schema for scenario configuration.
+    required: true
+  - type: docs
+    path: docs
+    purpose: Pattern documentation and composition guidance.
+    required: true
+
+compatibility:
+  azureClouds: [AzureCloud]
+  regions: []
+  iac: [bicep]
+  runtimes: [python-3.11, node-20]
+  limitations:
+    - Bicep only in this split; Terraform support is deferred.
+    - Provisions a new Log Analytics workspace and Application Insights component on every deployment.
+    - No standalone sample config or evaluation dataset ships in this staging slice.
+
+composition:
+  selectable: true
+  defaultSelection: true
+  conflictsWith: []
+  replaces: []
+  notes:
+    - Requires the agentic-apps stable core.
+    - Scenario values must come from the composed manifest and its asset folder.
+
+ownership:
+  team: Frontier Accelerator Factory
+  maintainers: []
+tags: [chat, catalog, voice, config, assets]
+
+solutionPattern:
+  problemClass: Conversational catalog browsing with optional real-time voice.
+  interactionModel: User question to scenario-configured catalog answer with optional voice playback.
+
+supportedStableCores:
+  - id: agentic-apps
+    layer: stable-core
+    versionConstraint: ">=1.0.0 <2.0.0"
+    reason: Provides the Foundry account, project, model deployments, and search service the pattern composes with.
+
+requiredCoreCapabilities:
+  - ai-foundry-account
+  - ai-foundry-project
+  - ai-model-deployment
+  - ai-realtime-model-deployment
+  - ai-search
+
+application:
+  interfaces:
+    - name: Catalog web application
+      type: web-ui
+      description: Scenario-configured browser experience for catalog chat.
+      path: src/app
+    - name: Catalog API
+      type: http-api
+      description: Backend interface for catalog data, config, and scenario assets.
+      path: src/api
+  components:
+    - name: Scenario config provider
+      type: configuration
+      description: Fetches and exposes the browser-safe manifest subset.
+      path: src/app/src/contexts/ScenarioConfigProvider.tsx
+    - name: Catalog router
+      type: http-api
+      description: Serves catalog data from the configured endpoint.
+      path: src/api/routers/catalog.py
+    - name: Scenario asset router
+      type: http-api
+      description: Serves local scenario assets with containment checks.
+      path: src/api/routers/scenario_config_api.py
+
+dataContracts:
+  inputs:
+    - name: Scenario manifest
+      description: Manifest values that configure host copy, catalog behavior, and presentation.
+      formats: [json]
+      requiredFields: [host, welcome, catalog, presentation]
+      consumers: [scenario-config-api, catalog-ui]
+    - name: Scenario assets
+      description: Image files and related assets served from the composed scenario folder.
+      formats: [png, jpg, jpeg, svg, gif, webp]
+      requiredFields: [assets-path]
+      consumers: [scenario-asset-api, catalog-ui]
+    - name: Catalog rows
+      description: Scenario catalog data loaded into the backing store.
+      formats: [csv, json]
+      requiredFields: [image, id, title]
+      consumers: [catalog-api, loader]
+    - name: Policy documents
+      description: Scenario policy and guidance documents loaded for grounding.
+      formats: [txt, md, pdf]
+      requiredFields: [content]
+      consumers: [agent-loader, search-loader]
+  outputs:
+    - name: Grounded answer
+      description: Answer text and citations produced by the catalog chat flow.
+      formats: [json]
+      requiredFields: [answer, citations]
+      consumers: [catalog-ui]
+    - name: Rendered catalog experience
+      description: Scenario-selected catalog presentation rendered in the web app.
+      formats: [html]
+      requiredFields: [title, image, highlights]
+      consumers: [browser]
+
+configuration:
+  files:
+    - config/scenario-config.schema.json
+    - src/api/.env.sample
+    - src/app/.env.sample
+  environmentVariables:
+    - SCENARIO_PATH
+    - APPLICATIONINSIGHTS_CONNECTION_STRING
+    - VITE_API_BASE_URL
+    - VITE_HOST_APP_TITLE
+    - VITE_CHAT_WIDGET_THEME
+  behaviors:
+    - Scenario manifest is validated at compose time.
+    - Scenario assets are resolved only through the guarded asset route.
+    - The frontend image is scenario-free and driven by runtime config.
+
+scenarioExtensionPoints:
+  - name: Scenario configuration schema
+    type: configuration
+    description: Published contract for host, welcome, catalog, and presentation.
+    path: config/scenario-config.schema.json
+  - name: Host configuration
+    type: configuration
+    description: Supplies app title, icon, theme, and compliance banner.
+    path: src/app/src/lib/hostConfig.ts
+  - name: Welcome copy
+    type: configuration
+    description: Supplies welcome title, subtitle, and hint text.
+    path: src/app/src/CatalogApp.tsx
+  - name: Catalog behavior
+    type: configuration
+    description: Supplies route prefix, enabled endpoints, card schema, and copy.
+    path: src/app/src/CatalogApp.tsx
+  - name: Presentation mapping
+    type: configuration
+    description: Supplies item highlights, title aliases, and default image values.
+    path: src/app/src/lib/resolveItemPresentation.ts
+  - name: Card variant
+    type: configuration
+    description: Selects the pattern-owned grid or list layout.
+    path: src/app/src/components/CatalogItemCard.tsx
+  - name: Scenario assets
+    type: data
+    description: Supplies image files resolved through the guarded asset route.
+    path: src/api/routers/scenario_config_api.py
+
+evaluations:
+  - name: Scenario config validation
+    purpose: Verifies that composed scenario manifests satisfy the published schema and asset contract.
+    path: scripts/shared
+    metrics: [schema-valid, asset-resolvable, browser-safe]
+  - name: Generic catalog rendering
+    purpose: Verifies that the generic catalog app can render each configured card variant.
+    path: src/app
+    metrics: [layout-fidelity, empty-state, error-state]
+
+nonGoals:
+  - Provisioning shared platform resources owned by a stable core.
+  - Carrying scenario-specific values or literals in pattern code.
+  - Shipping a standalone sample scenario or sample config instance.

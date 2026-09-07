@@ -1,0 +1,109 @@
+$schema: ../metadata/schemas/stable-core.schema.json
+schemaVersion: "1.0"
+kind: stable-core
+id: agentic-apps
+name: Agentic Apps
+version: 1.0.0
+status: proposed
+summary: Shared Foundry and search foundation for composable agentic applications.
+description: >-
+  Provisions an Azure AI Foundry account and project, Foundry project connections,
+  reusable model deployments, and Azure AI Search for agentic solutions.
+repositoryPath: stable-cores/agentic-apps
+
+capabilities:
+  - id: azure-ai-foundry-project
+    name: Azure AI Foundry project
+    description: Provisions a Foundry account and project for reusable agent and model workloads.
+    category: infrastructure
+    keywords: [foundry, agents, projects]
+  - id: azure-ai-foundry-connections
+    name: Foundry project connections
+    description: Creates Foundry project connections to Azure AI Search and other shared resources.
+    category: infrastructure
+    keywords: [foundry, connections, integration]
+  - id: azure-ai-foundry-model-deployments
+    name: Foundry model deployments
+    description: Deploys reusable AI models into the Foundry account for composed agent workloads.
+    category: infrastructure
+    keywords: [foundry, models, deployments]
+  - id: azure-ai-search
+    name: Azure AI Search
+    description: Provisions Azure AI Search for retrieval and grounding workloads.
+    category: data
+    keywords: [search, retrieval, grounding]
+
+artifacts:
+  - type: infra
+    path: infra/bicep
+    purpose: Bicep implementation of the stable control-plane foundation.
+    required: true
+  - type: docs
+    path: README.md
+    purpose: Describes the core boundary, deployment, and composition expectations.
+    required: true
+
+compatibility:
+  azureClouds: [AzureCloud]
+  regions: []
+  iac: [bicep]
+  runtimes: []
+  limitations:
+    - Terraform is intentionally out of scope for this approved split.
+    - The core is greenfield-only; existing Foundry project reuse is excluded.
+
+composition:
+  selectable: true
+  defaultSelection: true
+  conflictsWith: []
+  replaces: []
+  notes:
+    - Compose exactly one stable core into a solution.
+    - Technical patterns consume the Foundry project, connections, and Azure AI Search provided here.
+    - Do not add application hosting or domain data to this layer.
+
+ownership:
+  team: Frontier Accelerator Factory
+  maintainers: []
+
+tags: [azure, ai, foundry, search, agentic]
+
+platform:
+  family: Agentic Apps
+  deploymentScopes: [azure-resource-group]
+  characteristics:
+    - Shared control-plane foundation for reusable agentic solutions.
+    - Greenfield Foundry and search provisioning only.
+    - Bicep-only in this approved split.
+
+services:
+  - name: Azure AI Foundry
+    purpose: Hosts the account, project, project connections, and reusable model deployments.
+    optional: false
+  - name: Azure AI Search
+    purpose: Supplies grounded retrieval and search indexing for composed patterns.
+    optional: false
+
+deployment:
+  iacPaths: [infra/bicep]
+  entryPoints: [infra/bicep/main.bicep]
+  postProvision: []
+  prerequisites:
+    - Azure subscription with permissions to create Foundry and search resources.
+    - Region support for Azure AI Foundry and Azure AI Search.
+
+extensionPoints:
+  - name: Foundry project connections
+    type: service-connection
+    description: Technical patterns bind search and other shared resources into the Foundry project.
+  - name: Model deployments
+    type: service-connection
+    description: Technical patterns can reuse the pre-deployed Foundry models for agent workloads.
+  - name: Search endpoint
+    type: search-extension
+    description: Technical patterns consume the shared Azure AI Search endpoint for grounding.
+
+nonGoals:
+  - Application hosting or compute.
+  - Domain data, prompts, business rules, or scenario assets.
+  - Terraform implementation files in this approved split.
